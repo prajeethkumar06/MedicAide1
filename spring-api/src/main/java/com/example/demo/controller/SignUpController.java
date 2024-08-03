@@ -9,48 +9,77 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing sign-up entities.
+ */
 @CrossOrigin("*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/signup")
-
 public class SignUpController {
 
-	    private SignUpService signupService;
+    private final SignUpService signupService;
 
-	    // Build Add Employee REST API
-	    @PostMapping
-	    public ResponseEntity<SignUpDto> createSignUp(@RequestBody SignUpDto signupDto){
-	        SignUpDto savedSignUp = signupService.createSignUp(signupDto);
-	        return new ResponseEntity<>(savedSignUp, HttpStatus.CREATED);
-	    }
+    /**
+     * Handles POST requests to create a new sign-up entry.
+     *
+     * @param signupDto Data Transfer Object containing sign-up details.
+     * @return ResponseEntity containing the created SignUpDto and HTTP status CREATED.
+     */
+    @PostMapping
+    public ResponseEntity<SignUpDto> createSignUp(@RequestBody SignUpDto signupDto) {
+        SignUpDto savedSignUp = signupService.createSignUp(signupDto);
+        return new ResponseEntity<>(savedSignUp, HttpStatus.CREATED);
+    }
 
-	    // Build Get Employee REST API
-	    @GetMapping("{doctorid}")
-	    public ResponseEntity<SignUpDto> getSignUpById(@PathVariable("doctorid") Long Id){
-	        SignUpDto employeeDto = signupService.getSignUpById(Id);
-	        return ResponseEntity.ok(employeeDto);
-	    }
+    /**
+     * Handles GET requests to retrieve a sign-up entry by doctor ID.
+     *
+     * @param doctorid The ID of the doctor.
+     * @return ResponseEntity containing the SignUpDto and HTTP status OK.
+     */
+    @GetMapping("{doctorid}")
+    public ResponseEntity<SignUpDto> getSignUpByDoctorid(@PathVariable("doctorid") String doctorid) {
+        SignUpDto signupDto = signupService.getSignUpByDoctorid(doctorid);
+        return ResponseEntity.ok(signupDto);
+    }
 
-	    // Build Get All Employees REST API
-	    @GetMapping
-	    public ResponseEntity<List<SignUpDto>> getAllSignUps(){
-	        List<SignUpDto> signups = signupService.getAllSignUp();
-	        return ResponseEntity.ok(signups);
-	    }
+    /**
+     * Handles GET requests to retrieve all sign-up entries.
+     *
+     * @return ResponseEntity containing a list of SignUpDto and HTTP status OK.
+     */
+    @GetMapping
+    public ResponseEntity<List<SignUpDto>> getAllSignUps() {
+        List<SignUpDto> signups = signupService.getAllSignUp();
+        return ResponseEntity.ok(signups);
+    }
 
-	    // Build Update Employee REST API
-	    @PutMapping("{doctorid}")
-	    public ResponseEntity<SignUpDto> updateEmployee(@PathVariable("doctorid") Long Id,
-	                                                      @RequestBody SignUpDto updatedSignUp){
-	          SignUpDto signupDto = signupService.updateSignUp(Id, updatedSignUp);
-	          return ResponseEntity.ok(signupDto);
-	    }
+    /**
+     * Handles PUT requests to update a sign-up entry by doctor ID.
+     *
+     * @param doctorid The ID of the doctor.
+     * @param updatedSignUp Data Transfer Object containing updated sign-up details.
+     * @return ResponseEntity containing the updated SignUpDto and HTTP status OK.
+     */
 
-	    // Build Delete Employee REST API
-	    @DeleteMapping("{doctorid}")
-	    public ResponseEntity<String> deleteEmployee(@PathVariable("doctorid") Long Id){
-	        signupService.deleteSignUp(Id);
-	        return ResponseEntity.ok("Doctor Id deleted successfully!.");
-	    }
-	}
+    @PutMapping("{doctorid}")
+    public ResponseEntity<SignUpDto> updateSignUp(@PathVariable("doctorid") String doctorid,
+                                                   @RequestBody SignUpDto updatedSignUp) {
+        SignUpDto signupDto = signupService.updateSignUp(doctorid, updatedSignUp);
+        return ResponseEntity.ok(signupDto);
+    }
+
+    /**
+     * Handles DELETE requests to delete a sign-up entry by doctor ID.
+     *
+     * @param doctorid The ID of the doctor.
+     * @return ResponseEntity containing a success message and HTTP status OK.
+     */
+	
+    @DeleteMapping("{doctorid}")
+    public ResponseEntity<String> deleteSignUp(@PathVariable("doctorid") String doctorid) {
+        signupService.deleteSignUp(doctorid);
+        return ResponseEntity.ok("Doctor ID deleted successfully.");
+    }
+}
